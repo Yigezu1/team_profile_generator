@@ -9,10 +9,126 @@ const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
-
+const Employee = require("./lib/Employee");
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
+const employees = [];
+const internQ = [
+  {
+    type: "input",
+    message: "What is the name of the intern?",
+    name: "name",
+  },
+  {
+    type: "input",
+    message: "What is the id of the intern?",
+    name: "id",
+  },
+  {
+    type: "input",
+    message: "What is the email address of the intern?",
+    name: "email",
+  },
+  {
+    type: "input",
+    message: "What is the school of the intern?",
+    name: "school",
+  },
+  {
+    type: "confirm",
+    name: "again",
+    message: "Enter another input? ",
+    default: true,
+  },
+];
+
+const engineerQ = [
+  {
+    type: "input",
+    message: "What is the name of the engineer?",
+    name: "name",
+  },
+  {
+    type: "input",
+    message: "What is the id of the engineer?",
+    name: "id",
+  },
+  {
+    type: "input",
+    message: "What is the email address the engineer?",
+    name: "email",
+  },
+  {
+    type: "input",
+    message: "What is the GitHub user name of the engineer?",
+    name: "githubuser",
+  },
+  {
+    type: "confirm",
+    name: "again",
+    message: "Enter another input? ",
+    default: true,
+  },
+];
+
+const managerQ = [
+  {
+    type: "input",
+    message: "What is the name of the manager?",
+    name: "name",
+  },
+  {
+    type: "input",
+    message: "What is the id of the manager?",
+    name: "id",
+  },
+  {
+    type: "input",
+    message: "What is the email address of the manager?",
+    name: "email",
+  },
+  {
+    type: "input",
+    message: "What is the office number of the manager?",
+    name: "officeNumber",
+  },
+  {
+    type: "confirm",
+    name: "again",
+    message: "Enter another input? ",
+    default: true,
+  },
+];
+
+const collectInputs = async (inputs = []) => {
+  const { again, ...answers } = await inquirer.prompt(inputs);
+  const newInputs = [...inputs, answers];
+  const { name, id, email, githubuser, school, officeNumber } = answers;
+  if (officeNumber) {
+    employees.push(new Manager(name, id, email, officeNumber));
+  } else if (githubuser) {
+    employees.push(new Engineer(name, id, email, githubuser));
+  } else {
+    employees.push(new Intern(name, id, email, school));
+  }
+  console.log(employees);
+  if (again) {
+    const { inpType } = await inquirer.prompt([
+      {
+        type: "list",
+        message: "What type of employee you want to add?",
+        name: "inpType",
+        choices: ["Engineer", "Intern"],
+      },
+    ]);
+    inpType === "Engineer" ? (inputs = engineerQ) : (inputs = internQ);
+
+    return collectInputs(inputs);
+  }
+};
+
+collectInputs(managerQ);
 
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
