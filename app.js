@@ -119,16 +119,51 @@ const collectInputs = async (inputs = []) => {
         type: "list",
         message: "What type of employee you want to add?",
         name: "inpType",
-        choices: ["Engineer", "Intern"],
+        choices: ["Manager", "Engineer", "Intern"],
       },
     ]);
-    inpType === "Engineer" ? (inputs = engineerQ) : (inputs = internQ);
+    switch (inpType) {
+      case "Manager":
+        inputs = managerQ;
+        break;
+      case "Engineer":
+        inputs = engineerQ;
+        break;
+      case "Intern":
+        inputs = internQ;
+        break;
+      default:
+    }
+    // inpType === "Engineer" ? (inputs = engineerQ) : (inputs = internQ);
 
     return collectInputs(inputs);
   }
 };
 
-collectInputs(managerQ);
+inquirer
+  .prompt([
+    {
+      type: "list",
+      message: "What type of employee you want to add?",
+      name: "inpType",
+      choices: ["Manager", "Engineer", "Intern"],
+    },
+  ])
+  .then(function (response) {
+    const { inpType } = response;
+    switch (inpType) {
+      case "Manager":
+        collectInputs(managerQ);
+        break;
+      case "Engineer":
+        collectInputs(engineerQ);
+        break;
+      case "Intern":
+        collectInputs(internQ);
+        break;
+      default:
+    }
+  });
 
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
