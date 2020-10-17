@@ -102,41 +102,48 @@ const managerQ = [
 ];
 
 const collectInputs = async (inputs = []) => {
-  const { again, ...answers } = await inquirer.prompt(inputs);
-  const newInputs = [...inputs, answers];
-  const { name, id, email, githubuser, school, officeNumber } = answers;
-  if (officeNumber) {
-    employees.push(new Manager(name, id, email, officeNumber));
-  } else if (githubuser) {
-    employees.push(new Engineer(name, id, email, githubuser));
-  } else {
-    employees.push(new Intern(name, id, email, school));
-  }
-  console.log(employees);
-  if (again) {
-    const { inpType } = await inquirer.prompt([
-      {
-        type: "list",
-        message: "What type of employee you want to add?",
-        name: "inpType",
-        choices: ["Manager", "Engineer", "Intern"],
-      },
-    ]);
-    switch (inpType) {
-      case "Manager":
-        inputs = managerQ;
-        break;
-      case "Engineer":
-        inputs = engineerQ;
-        break;
-      case "Intern":
-        inputs = internQ;
-        break;
-      default:
+  try {
+    const { again, ...answers } = await inquirer.prompt(inputs);
+    // const newInputs = [...inputs, answers];
+    const { name, id, email, githubuser, school, officeNumber } = answers;
+    if (officeNumber) {
+      employees.push(new Manager(name, id, email, officeNumber));
+    } else if (githubuser) {
+      employees.push(new Engineer(name, id, email, githubuser));
+    } else {
+      employees.push(new Intern(name, id, email, school));
     }
-    // inpType === "Engineer" ? (inputs = engineerQ) : (inputs = internQ);
+    console.log(employees);
+    if (again) {
+      const { inpType } = await inquirer.prompt([
+        {
+          type: "list",
+          message: "What type of employee you want to add?",
+          name: "inpType",
+          choices: ["Manager", "Engineer", "Intern"],
+        },
+      ]);
+      switch (inpType) {
+        case "Manager":
+          inputs = managerQ;
+          break;
+        case "Engineer":
+          inputs = engineerQ;
+          break;
+        case "Intern":
+          inputs = internQ;
+          break;
+        default:
+      }
+      // inpType === "Engineer" ? (inputs = engineerQ) : (inputs = internQ);
 
-    return collectInputs(inputs);
+      return collectInputs(inputs);
+    } else {
+      const html = await render(employees);
+      fs.writeFileSync(outputPath, html);
+    }
+  } catch {
+    throw new Error("Error Occured");
   }
 };
 
@@ -150,20 +157,30 @@ inquirer
     },
   ])
   .then(function (response) {
+    let data = "";
     const { inpType } = response;
     switch (inpType) {
       case "Manager":
-        collectInputs(managerQ);
+        data = managerQ;
         break;
       case "Engineer":
-        collectInputs(engineerQ);
+        data = engineerQ;
         break;
       case "Intern":
-        collectInputs(internQ);
+        data = internQ;
         break;
       default:
     }
+    collectInputs(data);
   });
+
+async function renderToteam(html) {
+  try {
+    await fs.writeFile(outputPath, html);
+  } catch {
+    throw new Error("Error writing to file");
+  }
+}
 
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
