@@ -7,7 +7,7 @@
   ## Description
 
   
-  This app is a CLI used to generate team profile. When running the app, you will be asked a series of questions about the employee type (Manager, Engineer or Intern) that you want to add as your team member. Once you choosed your employee type, then there will be other type specific information that you need to provide. If you done by providing all information regarding your employee you choosed to add, the last question will ask you if you want to keep on adding another employee to your team. If you choose yes, you will be presented with those employee type specific questions. If you choose no, the app will generate the html file for your team and exit.
+  This app is a CLI app used to generate team profile. When running the app, you will be asked a series of questions about the employee type (Manager, Engineer or Intern) that you want to add as your team member. Once you choosed your employee type, then there will be other type specific information that you need to provide. If you done by providing all information regarding your employee you choosed to add, the last question will ask you if you want to keep on adding another employee to your team. If you choose yes, you will be presented with those employee type specific questions. If you choose no, the app will generate the html file for your team and exit.
 
 ![profilegenerator](https://user-images.githubusercontent.com/42190239/96651876-c112da80-1303-11eb-9cc5-6dd25129e853.PNG)
 
