@@ -13,7 +13,9 @@ const Employee = require("./lib/Employee");
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
+// Initialize the employees array to an empty array
 const employees = [];
+// Questions for an Intern
 const internQ = [
   {
     type: "input",
@@ -43,6 +45,7 @@ const internQ = [
   },
 ];
 
+// Questions for Engineer Employees
 const engineerQ = [
   {
     type: "input",
@@ -72,6 +75,7 @@ const engineerQ = [
   },
 ];
 
+// Questions for Manager
 const managerQ = [
   {
     type: "input",
@@ -101,10 +105,10 @@ const managerQ = [
   },
 ];
 
+// This code segment generates the employee profile
 const collectInputs = async (inputs = []) => {
   try {
-    const { again, ...answers } = await inquirer.prompt(inputs);
-    // const newInputs = [...inputs, answers];
+    const { again, ...answers } = await inquirer.prompt(inputs);    
     const { name, id, email, githubuser, school, officeNumber } = answers;
     if (officeNumber) {
       employees.push(new Manager(name, id, email, officeNumber));
@@ -134,8 +138,7 @@ const collectInputs = async (inputs = []) => {
           inputs = internQ;
           break;
         default:
-      }
-      // inpType === "Engineer" ? (inputs = engineerQ) : (inputs = internQ);
+      }     
 
       return collectInputs(inputs);
     } else {
@@ -147,6 +150,7 @@ const collectInputs = async (inputs = []) => {
   }
 };
 
+// This code initiallizes the app by asking the client what kind of Employee he/she want to add.
 inquirer
   .prompt([
     {
@@ -173,31 +177,3 @@ inquirer
     }
     collectInputs(data);
   });
-
-async function renderToteam(html) {
-  try {
-    await fs.writeFile(outputPath, html);
-  } catch {
-    throw new Error("Error writing to file");
-  }
-}
-
-// After the user has input all employees desired, call the `render` function (required
-// above) and pass in an array containing all employee objects; the `render` function will
-// generate and return a block of HTML including templated divs for each employee!
-
-// After you have your html, you're now ready to create an HTML file using the HTML
-// returned from the `render` function. Now write it to a file named `team.html` in the
-// `output` folder. You can use the variable `outputPath` above target this location.
-// Hint: you may need to check if the `output` folder exists and create it if it
-// does not.
-
-// HINT: each employee type (manager, engineer, or intern) has slightly different
-// information; write your code to ask different questions via inquirer depending on
-// employee type.
-
-// HINT: make sure to build out your classes first! Remember that your Manager, Engineer,
-// and Intern classes should all extend from a class named Employee; see the directions
-// for further information. Be sure to test out each class and verify it generates an
-// object with the correct structure and methods. This structure will be crucial in order
-// for the provided `render` function to work! ```
